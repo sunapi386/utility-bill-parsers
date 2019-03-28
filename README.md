@@ -16,4 +16,16 @@ $ python3 pge_extract.py 0000custbill20182006.pdf
     "gasTotal": "$10.45"
 }
 ```
-
+Xfinity PDF statements to JSON.
+```bash
+$ python3 extract_xfinity.py xfinity-201903.pdf
+{
+    "account": "0000 00 000 0000000",
+    "days_count": "30",
+    "days_end": "Apr 13, 2019",
+    "days_start": "Mar 14, 2019",
+    "due": "Mar 09, 2019",
+    "file": "xfinity-201903.pdf",
+    "total": "$89.99"
+}
+```

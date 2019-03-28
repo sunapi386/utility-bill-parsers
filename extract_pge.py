@@ -50,12 +50,13 @@ class PGEPdfParser():
 
     def rx(self, regex):
         matches = re.finditer(regex, self.pdf_str, re.MULTILINE)
-        if not matches:
-            return ""
-        first_match = next(matches)
-        matched_str = first_match.group()
-        single_spaces = re.sub(' +', ' ', matched_str)
-        return single_spaces
+        try:
+            first_match = next(matches)
+            matched_str = first_match.group()
+            single_spaces = re.sub(' +', ' ', matched_str)
+            return single_spaces
+        except StopIteration:
+            return "NOT FOUND: " + regex
 
     def dict(self):
         acct = self.rx(self.rxAccountNo).split()[-1]
