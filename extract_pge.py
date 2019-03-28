@@ -5,16 +5,19 @@ Author: Jason Sun <sunapi386@gmail.com>
 Date: 2019-03-28
 
 Example:
-$ python3 extract_pge.py 0000custbill20182006.pdf
+$ python3 extract_pge.py 0000custbill20182007.pdf
 {
-    "account": "000000000-0",
-    "days": "05/19/2018 - 06/19/2018 (32 billing days)",
-    "due": "07/11/2018",
-    "electricConsumed": "274.000000 kWh",
-    "electricTotal": "$61.15",
-    "file": "0000custbill20182006.pdf",
-    "gasConsumed": "8.000000 Therms",
-    "gasTotal": "$10.45"
+    "account": "00000000-0",
+    "days_count": "30",
+    "days_end": "07/19/2018",
+    "days_start": "06/20/2018",
+    "due": "08/10/2018",
+    "electricConsumed": "402.000000 kWh",
+    "electricTotal": "$96.84",
+    "file": "0000custbill20182007.pdf",
+    "gasConsumed": "5.000000 Therms",
+    "gasTotal": "$6.49",
+    "total": "$103.33"
 }
 
 """
@@ -57,8 +60,7 @@ class PGEPdfParser():
     def dict(self):
         acct = self.rx(self.rxAccountNo).split()[-1]
         date = self.rx(self.rxDueDate).split()[-1]
-        days_summary = self.rx(self.rxDays)
-        summary_split = days_summary.split()
+        summary_split = self.rx(self.rxDays).split()
         e_total = self.rx(self.rxElectricTotal).split()[-1]
         e_cons = " ".join(self.rx(self.rxElectricConsumed).split()[-2:])
         g_total = self.rx(self.rxGasTotal).split()[-1]
@@ -68,9 +70,9 @@ class PGEPdfParser():
             "file": self.file,
             "account": acct,
             "due": date,
-            "days_start": days_summary[0],
-            "days_end": days_summary[2],
-            "days_count": days_summary[3][1:],
+            "days_start": summary_split[0],
+            "days_end": summary_split[2],
+            "days_count": summary_split[3][1:],
             "electricTotal": e_total,
             "electricConsumed": e_cons,
             "gasTotal": g_total,
