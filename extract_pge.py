@@ -38,6 +38,7 @@ class PGEPdfParser():
         self.rxElectricConsumed = r"Total Usage\s+\d+\.\d+\skWh"
         self.rxGasTotal = r"Total Gas Charges\s+\$\d+\.\d\d"
         self.rxGasConsumed = r"Gas Usage This Period\:\s+\d+\.\d+\s+Therms"
+        self.rxTotalDue = r"Total Amount Due by \d+\/\d+\/\d+\s+\$\d+.\d\d"
 
     def pdf2str(docPath):
         with open(docPath, "rb") as f:
@@ -56,20 +57,25 @@ class PGEPdfParser():
     def dict(self):
         acct = self.rx(self.rxAccountNo).split()[-1]
         date = self.rx(self.rxDueDate).split()[-1]
-        days = self.rx(self.rxDays)
+        days_summary = self.rx(self.rxDays)
+        summary_split = days_summary.split()
         e_total = self.rx(self.rxElectricTotal).split()[-1]
         e_cons = " ".join(self.rx(self.rxElectricConsumed).split()[-2:])
         g_total = self.rx(self.rxGasTotal).split()[-1]
         g_cons = " ".join(self.rx(self.rxGasConsumed).split()[-2:])
+        total = self.rx(self.rxTotalDue).split()[-1]
         return {
             "file": self.file,
             "account": acct,
             "due": date,
-            "days": days,
+            "days_start": days_summary[0],
+            "days_end": days_summary[2],
+            "days_count": days_summary[3][1:],
             "electricTotal": e_total,
             "electricConsumed": e_cons,
             "gasTotal": g_total,
-            "gasConsumed": g_cons
+            "gasConsumed": g_cons,
+            "total": total
         }
 
 
